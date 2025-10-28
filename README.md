@@ -38,19 +38,21 @@ An intelligent AI-powered system that automates tennis match communications for 
 The system uses a **multi-agent architecture** with specialized AI agents:
 
 ```
-┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│   Scraper       │    │   Captain       │    │   Email         │
-│   Agent         │    │   Lookup        │    │   Generator     │
-│                 │    │   Agent         │    │   Agent         │
-└─────────────────┘    └─────────────────┘    └─────────────────┘
-         │                       │                       │
-         └───────────────────────┼───────────────────────┘
-                                 │
-                    ┌─────────────────┐
-                    │   Supervisor    │
-                    │   Agent         │
-                    │   (CrewAI)      │
-                    └─────────────────┘
+┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│   Scraper       │    │   Captain       │    │   Email         │    │   Gmail         │
+│   Agent         │    │   Lookup        │    │   Generator     │    │   Draft         │
+│                 │    │   Agent         │    │   Agent         │    │   Agent         │
+└─────────────────┘    └─────────────────┘    └─────────────────┘    └─────────────────┘
+         │                                                                       │
+         └───────────────────────┼───────────────────────┼───────────────────────┘
+                                 │                       
+                    ┌─────────────────┐                 
+                    │   Supervisor    │                 
+                    │   Agent         │                 
+                    │   (CrewAI)      │                 
+                    └─────────────────┘                 
+                                                         
+                   
 ```
 
 ### Agent Responsibilities
@@ -58,8 +60,18 @@ The system uses a **multi-agent architecture** with specialized AI agents:
 1. **Scraper Agent**: Extracts match schedules from tenniscores.com using CSS selectors
 2. **Captain Lookup Agent**: Finds opponent team contact information from teams.json
 3. **Email Generator Agent**: Creates personalized match reminder emails
-4. **Gmail Agent**: Handles email composition and sending via Gmail API
+4. **Gmail Draft Agent**: Handles email composition and draft creation via Gmail API
 5. **Supervisor Agent**: Coordinates all tasks and manages the workflow
+
+### Gmail Email Drafts
+
+The system leverages Gmail's draft functionality to create professional match reminder emails:
+
+- **Draft Creation**: Emails are composed as drafts rather than sent directly
+- **Manual Review**: Captains can review and edit emails before sending
+- **Professional Formatting**: Emails include proper subject lines, venue details, and contact information
+- **OAuth2 Security**: Secure authentication ensures only authorized access to Gmail accounts
+- **Template-Based**: Consistent email structure with personalized content for each opponent
 
 ##  Workflow
 
@@ -94,31 +106,16 @@ The system uses a **multi-agent architecture** with specialized AI agents:
 
 3. **Install dependencies**
    ```bash
-   pip install crewai crewai_tools pydantic google_auth_oauthlib
+   pip3 install -r requirements.txt
    ```
 
 4. **Set up environment variables**
    ```bash
    export OPENAI_API_KEY="your-openai-api-key"
-   export gc_client_id="your-google-client-id"
-   export gc_client_secret="your-google-client-secret"
-   export gc_refresh_token="your-refresh-token"
    ```
 
 5. **Create credentials.json**
-   ```json
-   {
-     "installed": {
-       "client_id": "YOUR_CLIENT_ID",
-       "project_id": "YOUR_PROJECT_ID",
-       "auth_uri": "https://accounts.google.com/o/oauth2/auth",
-       "token_uri": "https://oauth2.googleapis.com/token",
-       "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
-       "client_secret": "YOUR_CLIENT_SECRET",
-       "redirect_uris": ["http://localhost"]
-     }
-   }
-   ```
+    TODO - explain GC credentials.json
 
 6. **Run the notebook**
    ```bash
@@ -131,10 +128,10 @@ The system uses a **multi-agent architecture** with specialized AI agents:
 tennis-email-agent/
 ├── tennis-email-agent.ipynb    # Main Jupyter notebook
 ├── teams.json                   # Team captain contact database
-├── refresh_token.py             # OAuth2 token refresh utility
+├── setup_email  .py             # Setup GC token.pickle
 ├── requirements.txt             # Python dependencies
 ├── credentials.json             # Google OAuth2 credentials (not in repo)
-├── captain_list.pdf             # Reference document
+├── captain_list.pdf             # Reference document (used to generate teams.json     TODO)
 └── README.md                    # This file
 ```
 
@@ -158,9 +155,6 @@ tennis-email-agent/
 
 ### Environment Variables
 - `OPENAI_API_KEY`: Your OpenAI API key for GPT-4o
-- `gc_client_id`: Google OAuth2 client ID
-- `gc_client_secret`: Google OAuth2 client secret
-- `gc_refresh_token`: Gmail API refresh token
 
 ## Use Cases
 
