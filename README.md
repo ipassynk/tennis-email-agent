@@ -2,6 +2,9 @@
 
 An intelligent AI-powered system that automates tennis match communications for the Toronto Winter League. This agent automatically scrapes match schedules, looks up opponent team captains, and generates personalized reminder emails.
 
+Result - email draft
+![img.png](img.png)
+
 ## Features
 
 - **Automated Schedule Scraping**: Extracts match information from tenniscores.com
